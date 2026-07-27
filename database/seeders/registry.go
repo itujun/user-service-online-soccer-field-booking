@@ -10,7 +10,7 @@ type ISeederRegistry interface {
 	Run()
 }
 
-func NewRegistry(db *gorm.DB) ISeederRegistry {
+func NewSeederRegistry(db *gorm.DB) ISeederRegistry {
 	return &Registry{
 		db: db,
 	}
