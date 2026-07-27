@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 	"user-service/config"
+	"user-service/constants"
+	errConstant "user-service/constants/errors"
 	"user-service/domain/dto"
 	"user-service/repositories"
 
@@ -77,8 +79,74 @@ func (s *UserService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.Lo
 	return response, nil
 }
 
+func (u *UserService) isUsernameExist(ctx context.Context, username string) bool {
+	user, err := u.repository.GetUser().FindByUsername(ctx, username)
+	if err != nil {
+		return false
+	}
+
+	if user != nil {
+		return true
+	}
+
+	return false
+}
+
+func (u *UserService) isUEmailExist(ctx context.Context, email string) bool {
+	user, err := u.repository.GetUser().FindByEmail(ctx, email)
+	if err != nil {
+		return false
+	}
+
+	if user != nil {
+		return true
+	}
+
+	return false
+}
+
 func (s *UserService) Register(ctx context.Context, req *dto.RegisterRequest) (*dto.RegisterResponse, error) {
-	return nil, nil
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	if s.isUsernameExist(ctx, req.Username) {
+		return nil, errConstant.ErrUsernameExist
+	}
+
+	if s.isUEmailExist(ctx, req.Email) {
+		return nil, errConstant.ErrEmailExist
+	}
+
+	if req.Password != req.ConfirmPassword {
+		return nil, errConstant.ErrPasswordDoesNotMatch
+	}
+
+	user, err := s.repository.GetUser().Register(ctx, &dto.RegisterRequest{
+		Name:        req.Name,
+		Username:    req.Username,
+		Password:    string(hashedPassword),
+		Email:       req.Email,
+		PhoneNumber: req.PhoneNumber,
+		RoleID:      constants.Customer,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.RegisterResponse{
+		User: dto.UserResponse{
+			UUID:        user.UUID,
+			Name:        user.Name,
+			Username:    user.Username,
+			PhoneNumber: user.PhoneNumber,
+			Email:       user.Email,
+		},
+	}
+
+	return response, nil
 }
 
 func (s *UserService) Update(ctx context.Context, req *dto.UpdateRequest, uuid string) (*dto.UserResponse, error) {

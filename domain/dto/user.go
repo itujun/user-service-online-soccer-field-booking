@@ -22,13 +22,13 @@ type LoginResponse struct {
 }
 
 type RegisterRequest struct {
-	Name        string `json:"name" validate:"required"`
-	Username    string `json:"username" validate:"required"`
-	Password    string `json:"password" validate:"required"`
-	ConfirmPass string `json:"confirmPass" validate:"required"`
-	Email       string `json:"email" validate:"required,email"`
-	PhoneNumber string `json:"phoneNumber" validate:"required"`
-	RoleID      uint
+	Name            string `json:"name" validate:"required"`
+	Username        string `json:"username" validate:"required"`
+	Password        string `json:"password" validate:"required"`
+	ConfirmPassword string `json:"confirmPass" validate:"required"`
+	Email           string `json:"email" validate:"required,email"`
+	PhoneNumber     string `json:"phoneNumber" validate:"required"`
+	RoleID          uint
 }
 
 type RegisterResponse struct {

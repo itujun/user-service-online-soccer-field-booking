@@ -17,8 +17,8 @@ type UserRepository struct {
 }
 
 type IUserRepository interface {
-	Register(context.Context, dto.RegisterRequest) (*models.User, error)
-	Update(context.Context, dto.UpdateRequest, string) (*models.User, error)
+	Register(context.Context, *dto.RegisterRequest) (*models.User, error)
+	Update(context.Context, *dto.UpdateRequest, string) (*models.User, error)
 	FindByUsername(context.Context, string) (*models.User, error)
 	FindByEmail(context.Context, string) (*models.User, error)
 	FindByUUID(context.Context, string) (*models.User, error)
@@ -28,7 +28,7 @@ func NewUserRepository(db *gorm.DB) IUserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) Register(ctx context.Context, req dto.RegisterRequest) (*models.User, error) {
+func (r *UserRepository) Register(ctx context.Context, req *dto.RegisterRequest) (*models.User, error) {
 	user := models.User{
 		UUID:        uuid.New(),
 		Name:        req.Name,
@@ -47,7 +47,7 @@ func (r *UserRepository) Register(ctx context.Context, req dto.RegisterRequest) 
 	return &user, nil
 }
 
-func (r *UserRepository) Update(ctx context.Context, req dto.UpdateRequest, uuid string) (*models.User, error) {
+func (r *UserRepository) Update(ctx context.Context, req *dto.UpdateRequest, uuid string) (*models.User, error) {
 	user := models.User{
 		Name:        req.Name,
 		Username:    req.Username,
