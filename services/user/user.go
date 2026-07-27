@@ -223,9 +223,36 @@ func (s *UserService) Update(ctx context.Context, req *dto.UpdateRequest, uuid s
 }
 
 func (s *UserService) GetUserLogin(ctx context.Context) (*dto.UserResponse, error) {
-	return nil, nil
+	var (
+		userLogin = ctx.Value(constants.UserLogin).(*dto.UserResponse)
+		data      dto.UserResponse
+	)
+
+	data = dto.UserResponse{
+		UUID:        userLogin.UUID,
+		Name:        userLogin.Name,
+		Username:    userLogin.Username,
+		PhoneNumber: userLogin.PhoneNumber,
+		Email:       userLogin.Email,
+		Role:        userLogin.Role,
+	}
+
+	return &data, nil
 }
 
 func (s *UserService) GetUserByUUID(ctx context.Context, uuid string) (*dto.UserResponse, error) {
-	return nil, nil
+	user, err := s.repository.GetUser().FindByUUID(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	data := dto.UserResponse{
+		UUID:        user.UUID,
+		Name:        user.Name,
+		Username:    user.Username,
+		PhoneNumber: user.PhoneNumber,
+		Email:       user.Email,
+	}
+
+	return &data, nil
 }
