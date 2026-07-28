@@ -13,7 +13,7 @@ watch: ## Run the service with hot reload
 
 ## Build:
 build: ## Build the service
-	go build -o user-service
+	go build -ldflags="-s -w" -o user-service
 
 ## Docker:
 docker-compose: ## Start the service in docker

@@ -23,6 +23,8 @@ WORKDIR /app
 
 EXPOSE 8001
 
-COPY --from=builder /app /app
+# PERBAIKAN: Hanya salin file yang benar-benar dibutuhkan untuk production
+COPY --from=builder /app/user-service /app/
+COPY --from=builder /app/.env /app/
 
 ENTRYPOINT ["/app/user-service"]
