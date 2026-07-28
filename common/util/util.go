@@ -77,9 +77,14 @@ func SetEnvFromConsulKV(v *viper.Viper) error {
 
 func BindFromConsul(dest any, endPoint, path string) error {
 	v := viper.New()
-
 	v.SetConfigType("json")
 	err := v.AddRemoteProvider("consul", endPoint, path)
+	if err != nil {
+		logrus.Errorf("failed to read remote config: %v", err)
+		return err
+	}
+
+	err = v.ReadRemoteConfig()
 	if err != nil {
 		logrus.Errorf("failed to read remote config: %v", err)
 		return err

@@ -12,7 +12,7 @@ type Response struct {
 	Status  string      `json:"status"`
 	Message any         `json:"message"`
 	Data    interface{} `json:"data"`
-	Token   *string     `json:"token"`
+	Token   *string     `json:"token,omitempty"`
 }
 
 type ParamHTTPResponse struct {
@@ -25,13 +25,14 @@ type ParamHTTPResponse struct {
 }
 
 func HTTPResponse(param ParamHTTPResponse) {
-	if param.Err != nil {
+	if param.Err == nil {
 		param.Gin.JSON(param.Code, Response{
 			Status:  constants.Success,
 			Message: http.StatusText(http.StatusOK),
 			Data:    param.Data,
 			Token:   param.Token,
 		})
+		return
 	}
 
 	message := errConstant.ErrInternalServerError.Error()
