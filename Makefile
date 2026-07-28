@@ -17,7 +17,7 @@ build: ## Build the service
 
 ## Docker:
 docker-compose: ## Start the service in docker
-	docker-compose up -d --build --force-recreate
+	docker compose up -d --build --force-recreate
 
 docker-build: ## Build the Docker image with a specified tag
 	@echo "$(CYAN)Building Docker image...$(RESET)"
